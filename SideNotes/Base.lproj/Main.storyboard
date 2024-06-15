@@ -837,18 +837,18 @@
                             <stackView orientation="vertical" alignment="leading" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pAV-or-BSQ">
                                 <rect key="frame" x="4" y="4" width="200" height="92"/>
                                 <beginningViews>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="WVc-ei-cfX">
+                                    <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WVc-ei-cfX">
                                         <rect key="frame" x="0.0" y="92" width="200" height="0.0"/>
                                         <subviews>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ChU-N6-yry">
-                                                <rect key="frame" x="3" y="-27" width="24" height="24"/>
+                                                <rect key="frame" x="3" y="3" width="24" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="24" id="QXC-d7-hq6"/>
                                                 </constraints>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="edit" id="bJe-lh-vWp"/>
                                             </imageView>
                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="x2E-7S-V6T">
-                                                <rect key="frame" x="35" y="-27" width="164" height="24"/>
+                                                <rect key="frame" x="35" y="3" width="164" height="24"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" alignment="right" title="Label" usesSingleLineMode="YES" id="auS-Jz-n1i">
                                                     <font key="font" metaFont="system" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -867,18 +867,18 @@
                                             <constraint firstAttribute="height" constant="30" id="oi0-Xs-QIP"/>
                                         </constraints>
                                     </customView>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="eUZ-eg-Hrz">
+                                    <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eUZ-eg-Hrz">
                                         <rect key="frame" x="0.0" y="90" width="200" height="0.0"/>
                                         <subviews>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="reI-nJ-BHc">
-                                                <rect key="frame" x="3" y="-27" width="24" height="24"/>
+                                                <rect key="frame" x="3" y="3" width="24" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="24" id="lbl-5H-8Gn"/>
                                                 </constraints>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="make" id="heq-gG-Cnc"/>
                                             </imageView>
                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4EW-gh-bi4">
-                                                <rect key="frame" x="35" y="-27" width="164" height="24"/>
+                                                <rect key="frame" x="35" y="3" width="164" height="24"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" alignment="right" title="Label" usesSingleLineMode="YES" id="5wR-SX-5o4">
                                                     <font key="font" metaFont="system" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -897,7 +897,7 @@
                                             <constraint firstAttribute="bottom" secondItem="4EW-gh-bi4" secondAttribute="bottom" constant="3" id="yaK-cG-MTt"/>
                                         </constraints>
                                     </customView>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="2hl-dj-fxZ">
+                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2hl-dj-fxZ">
                                         <rect key="frame" x="0.0" y="0.0" width="200" height="88"/>
                                         <buttonCell key="cell" type="roundTextured" title="Textured Rounded" bezelStyle="texturedRounded" image="plus" imagePosition="only" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="UVx-Wf-E2g">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>

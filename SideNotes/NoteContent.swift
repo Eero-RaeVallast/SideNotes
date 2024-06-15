@@ -7,6 +7,18 @@
 // TODO: Use real dates
 import Foundation
 
+struct DocumentData
+{
+    enum Content
+    {
+        case header, text
+    }
+    
+    var type: Content
+    var note: NoteContent
+    
+}
+
 class NoteContent
 {
     var creationDate: Date

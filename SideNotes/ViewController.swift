@@ -4,18 +4,23 @@
 //
 //  Created by Eero Mannik on 07.04.2024.
 //
+// TODO: Salvestada teksti muudatused
 
 import Cocoa
 
-class ViewController: NSViewController, NSTextLayoutManagerDelegate
+class ViewController: NSViewController
 {
     // RemoveMe
-    var testHeight: CGFloat = 0
+    //var testHeight: CGFloat = 0
+    var newLineAdded: Bool = false
+    var lineBreakLocation: NSTextLocation?
     /// Lisatud tekstiosa kõrgus
     var containerHeight: CGFloat = 0
     var sizeRect = NSRect(x: 0, y: 0, width: 120, height: 10)
     var notes = Notes()
     var content: [NoteContent] = [NoteContent]()
+    /// Vahetan andmed..
+    var documentData: [DocumentData] = [DocumentData]()
     var placeholderTextView: TextView = TextView()
     
     @IBOutlet weak var outlineView: NSOutlineView!
@@ -72,6 +77,33 @@ class ViewController: NSViewController, NSTextLayoutManagerDelegate
         outlineView.delegate = self
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillDisappear()
+    {
+        // save data
+        outlineView.enumerateAvailableRowViews 
+        { rowView, count in
+            
+            //let columns: Int = rowView.numberOfColumns
+            for itemNr in 0...count
+            {
+                if let header = rowView.view(atColumn: itemNr) as? HeaderView
+                {
+                    // outline view child of
+                    let nr = outlineView.numberOfChildren(ofItem: header)
+                    debugPrint("v.note?.text", nr)
+                }
+            }
+            
+//            if let view = rowView as? TextView
+//            {
+//                debugPrint(view.note?.text)
+//            }
+        }
+        //var text: String = getStringsFromNotes()
+
+        super.viewWillDisappear()
+    }
 
     // 2
     override var representedObject: Any?
@@ -81,6 +113,8 @@ class ViewController: NSViewController, NSTextLayoutManagerDelegate
             if let text = representedObject as? String
             {
                 content = NoteContent.getNoteContent(text: text)
+                dataFrom(content: content)
+                /// Nüüd vaja see tõlgendada DocumentData - ks
                 outlineView.reloadData()
             }
 //            else if let url = representedObject as? URLRequest
@@ -90,59 +124,29 @@ class ViewController: NSViewController, NSTextLayoutManagerDelegate
         }
     }
     
+    // FIXME: remove "content: [NoteContent]"
+    private func dataFrom(content: [NoteContent])
+    {
+        for note in content
+        {
+            documentData.append(DocumentData(type: .header, note: note))
+            //documentData.append(DocumentData(type: .text, note: note))
+        }
+    }
+    
     
     func getStringsFromNotes() -> String
     {
         var text: String = ""
-        for note in content
+        for data in documentData
         {
-            text.append(note.stringRepresentation())
+            text.append(data.note.stringRepresentation())
         }
+//        for note in content
+//        {
+//            text.append(note.stringRepresentation())
+//        }
         return text
-    }
-    
-    
-    // TODO: arvutada uus outline kõrgus
-    func textLayoutManager(
-        _ textLayoutManager: NSTextLayoutManager,
-        shouldBreakLineBefore location: NSTextLocation,
-        hyphenating: Bool
-    ) -> Bool
-    {
-        if let range = textLayoutManager.textContentManager?.documentRange
-        {
-            textLayoutManager.ensureLayout(for: range)
-        }
-        let newHeight = textLayoutManager.usageBoundsForTextContainer.height
-        return true
-//        if let textview = textLayoutManager.textContainer?.textView
-//        {
-//            
-//        }
-//        if let container = textLayoutManager.textContainer
-//        {
-            //manager.delegate = placeholderTextView
-//            if let range = textLayoutManager.textContentManager?.documentRange
-//            {
-//                textLayoutManager.ensureLayout(for: range)
-//            }
-//            //manager.ensureLayout(for: container)
-//            //newHeight = manager.usedRect(for: container).size.height
-//            let newHeight = textLayoutManager.usageBoundsForTextContainer.height
-        //}
-        
-//        if let manager = textView.layoutManager, let container = textView.textContainer
-//        {
-//            //manager.ensureLayout(for: container)
-//            let old_height = textView.frame.height
-//            let height = manager.usedRect(for: container).size.height
-//            
-//            if height > old_height
-//            {
-//                containerHeight = height
-//                outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
-//            }
-//        }
     }
     
 }
@@ -155,14 +159,14 @@ extension ViewController: NSOutlineViewDataSource
     {
         if item == nil 
         {
-            return content.count
+            return documentData.count
         }
         else
-        {
-            if item is NoteContent
+        {   // kontrollida DocumentData - ülejäänu on note!
+            if let header = item as? DocumentData, header.type == .header
             {
                 return 1
-            } 
+            }
             else
             {
                 return 0
@@ -173,20 +177,21 @@ extension ViewController: NSOutlineViewDataSource
     // 3 Returns the child item at the specified index of a given item
     func outlineView( _ outlineView: NSOutlineView, child index: Int, ofItem item: Any? ) -> Any
     {
-        if item == nil 
+        // if item is header
+        if item == nil
         {
-            return content[index]
-        } 
-        else
+            return documentData[index]
+        }
+        else //
         {
-            if let note = item as? NoteContent
+            if let data = item as? DocumentData
             {
-                return note.text
+                return data.note
             }
-            else if let text = item as? String
-            {
-                return text
-            }
+//            else if let text = item as? String
+//            {
+//                return text
+//            }
         }
         return "ERROR!"
     }
@@ -194,7 +199,8 @@ extension ViewController: NSOutlineViewDataSource
     // 4
     func outlineView( _ outlineView: NSOutlineView, isItemExpandable item: Any ) -> Bool
     {
-        if item is NoteContent
+        // kontrollida DocumentData - ülejäänu on note!
+        if let header = item as? DocumentData, header.type == .header
         {
             return true
         }
@@ -246,7 +252,10 @@ extension ViewController: NSOutlineViewDelegate
 //            return newHeight
 //        }
 //        else 
-        if let text = item as? String
+        
+        //FIXME: kui item on documentdata - note
+        if let note = item as? NoteContent
+//        if let text = item as? String
         {
             // juhul kui olemasolev kõrgus muutus
             if containerHeight > 0
@@ -256,7 +265,7 @@ extension ViewController: NSOutlineViewDelegate
             }
             else
             {
-                placeholderTextView = TextViewGenerator.makeTextView(frame: sizeRect, text: text, delegate: self)
+                placeholderTextView = TextViewGenerator.makeTextView(frame: sizeRect, note: note, delegate: self)
                 //placeholderTextView.string = text
                 //textContentStorage.textStorage?.setAttributedString(NSAttributedString(string: text))
                 //placeholderTextView.textContentStorage?.textStorage?.setAttributedString(NSAttributedString(string: text))
@@ -290,7 +299,7 @@ extension ViewController: NSOutlineViewDelegate
         let myWidth: CGFloat = CGFloat(tableColumn?.width ?? 200)
         sizeRect = NSRect(x: 0, y: 0, width: myWidth, height: 10)
         
-        if let note = item as? NoteContent
+        if let header = item as? DocumentData
         {
             // return header view
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
@@ -298,21 +307,22 @@ extension ViewController: NSOutlineViewDelegate
             {
                 //popoverVC.documentViewController = self
                 //headerVC.header = note.header
-                headerVC.note = note
+                headerVC.note = header.note
                 return headerVC.view
             }
             //return v
-        } // TODO: See ei toimi taaslaadimisel ??
+        } // FIXME: See ei toimi taaslaadimisel ??
         // ? reload item ?
-        else if let text = item as? String
+        else if let note = item as? NoteContent
         {
-            if text == placeholderTextView.string
+            if note.text == placeholderTextView.string
             {
                 return placeholderTextView
             }
             else
             {
-                let textView = TextViewGenerator.makeTextView(frame: sizeRect, text: text, delegate: self)
+                // textviewl peab olema note
+                let textView = TextViewGenerator.makeTextView(frame: sizeRect, note: note, delegate: self)
                 if let mgr = textView.textLayoutManager
                 {
                     mgr.delegate = self
@@ -387,30 +397,45 @@ extension ViewController: NSOutlineViewDelegate
 
 extension ViewController: NSTextViewDelegate
 {
+    
+    // TODO: OutlineView suuruse muudatus
+    // pean selle siin arvutama ja muutma
     func textDidChange(_ notification: Notification)
     {
-        //let item = outlineView.item(atRow: outlineView.selectedRow)
-        //outlineView.row(for: <#T##NSView#>)
-        if let textView = notification.object as? NSTextView
+        if newLineAdded
         {
-            if let manager = textView.textLayoutManager
-            //if let manager = textView.layoutManager
+            newLineAdded = false
+            if let textView = notification.object as? NSTextView
             {
-                let preChange = testHeight
-                let postChange = manager.usageBoundsForTextContainer.height
-                debugPrint("textDidChange")
+                if let manager = textView.textLayoutManager
+                {
+                    let row = outlineView.row(for: textView)
+                    let height = textView.frame.height
+                    // kontrollida, kas teksti vaade on piisavalt suuur
+                    if let range = textView.textLayoutManager?.textContentManager?.documentRange
+                    {
+                        textView.textLayoutManager?.ensureLayout(for: range)
+                    }
+                    containerHeight = manager.usageBoundsForTextContainer.height
+                    if height < containerHeight
+                    {
+                        outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+                    }
+                }
             }
         }
-        
-        //[aTableView setNeedsDisplayInRect:[aTableView rectOfRow:row]];
-        
     }
     
-//    func textDidEndEditing(_ notification: Notification)
-//    {
-//        
-//    }
-//    
+    func textDidEndEditing(_ notification: Notification)
+    {
+        if let textview = notification.object as? TextView
+        {
+            //textview.note?.text = textview.string
+            textview.saveNote()
+            //debugPrint(textview.string)
+        }
+    }
+    
     
     // To monitor the height of the text views, it should suffice to observe the NSViewFrameDidChangeNotification that they will post.
     func textView(
@@ -429,19 +454,38 @@ extension ViewController: NSTextViewDelegate
             {
                 if newText[index].isNewline
                 {
-                    let row = outlineView.row(for: textView)
-                    if let manager = textView.layoutManager, let container = textView.textContainer
-                    {
-                        //manager.ensureLayout(for: container)
-                        let old_height = textView.frame.height
-                        let height = manager.usedRect(for: container).size.height
-                        
-                        if height > old_height
-                        {
-                            containerHeight = height
-                            outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
-                        }
-                    }
+                    
+                    newLineAdded = true
+                    //let row = outlineView.row(for: textView)
+                    
+                    
+                    
+//                    if let manager = textView.layoutManager, let container = textView.textContainer
+//                    {
+//                        //manager.ensureLayout(for: container)
+//                        let old_height = textView.frame.height
+//                        let height = manager.usedRect(for: container).size.height
+//                        
+//                        if height > old_height
+//                        {
+//                            containerHeight = height
+//                            outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+//                        }
+//                    }
+                    // \\\\\\\\\\\\\\\\\
+//                    if let manager = textView.textLayoutManager, let container = textView.textContainer
+//                    {
+//
+//                        if let range = textView.textContentStorage?.documentRange
+//                        {
+//                            manager.ensureLayout(for: range)
+//                        }
+//                        testHeight = manager.usageBoundsForTextContainer.height
+//                        /// toimub enne teksti viimist vaatesse - liiga vara
+//                        containerHeight = testHeight
+//                        outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+//                    }
+                    // \\\\\\\\\\\\\\\\\
                 }
                 //print(newText[index], terminator: " ")
             }
@@ -449,10 +493,10 @@ extension ViewController: NSTextViewDelegate
         
         //\\\\\\\\\\\\\\\\
         
-        if let manager = textView.textLayoutManager
-        {
-            testHeight = manager.usageBoundsForTextContainer.height
-        }
+//        if let manager = textView.textLayoutManager
+//        {
+//            testHeight = manager.usageBoundsForTextContainer.height
+//        }
         //\\\\\\\\\\\\\\\\\\
         
         
@@ -474,5 +518,78 @@ extension ViewController: NSTextViewDelegate
         // outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))  //noteHeightOfRows(withIndexesChanged indexSet: IndexSet)
         //debugPrint("textview shouldChangeTextIn")
         return true
+    }
+}
+
+extension ViewController: NSTextLayoutManagerDelegate
+{
+    // TODO: locationi osa on lahtine
+    // käivitub enne kui "text did change"
+    func textLayoutManager(
+        _ textLayoutManager: NSTextLayoutManager,
+        shouldBreakLineBefore location: NSTextLocation,
+        hyphenating: Bool
+    ) -> Bool
+    {
+//        if let range = textLayoutManager.textContentManager?.documentRange
+//        {
+//            textLayoutManager.ensureLayout(for: range)
+//        }
+//        let newHeight = textLayoutManager.usageBoundsForTextContainer.height
+        
+//        if let tv = textLayoutManager.textContainer?.textView
+//        {
+//            let row = outlineView.row(for: tv)
+//            testHeight = textLayoutManager.usageBoundsForTextContainer.height
+//            containerHeight = testHeight
+//            outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+//        }
+        /// Salvestada textlocation
+        // ? kui on mitu eri kohta, kuidas käitub?
+        /// kontrollib kõike eraldi, !uute kohtadega!
+        
+        //debugPrint("Location:", lineBreakLocation?.description, location.description)
+        if let mylocation = lineBreakLocation
+        {
+            if !mylocation.isEqual(location)
+            {
+                newLineAdded = true
+                lineBreakLocation = location
+            }
+        }
+        else
+        {
+            lineBreakLocation = location
+            newLineAdded = true
+        }
+        return true
+//        if let textview = textLayoutManager.textContainer?.textView
+//        {
+//
+//        }
+//        if let container = textLayoutManager.textContainer
+//        {
+            //manager.delegate = placeholderTextView
+//            if let range = textLayoutManager.textContentManager?.documentRange
+//            {
+//                textLayoutManager.ensureLayout(for: range)
+//            }
+//            //manager.ensureLayout(for: container)
+//            //newHeight = manager.usedRect(for: container).size.height
+//            let newHeight = textLayoutManager.usageBoundsForTextContainer.height
+        //}
+        
+//        if let manager = textView.layoutManager, let container = textView.textContainer
+//        {
+//            //manager.ensureLayout(for: container)
+//            let old_height = textView.frame.height
+//            let height = manager.usedRect(for: container).size.height
+//
+//            if height > old_height
+//            {
+//                containerHeight = height
+//                outlineView.noteHeightOfRows(withIndexesChanged: IndexSet(integer: row))
+//            }
+//        }
     }
 }

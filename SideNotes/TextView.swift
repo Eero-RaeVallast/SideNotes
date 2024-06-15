@@ -9,6 +9,22 @@ import Cocoa
 
 class TextView: NSTextView//, NSTextLayoutManagerDelegate
 {
+    // TODO: muuta ka header
+    // teksti esimese rea muutumisel
+    
+    var note: NoteContent?
+    {
+        didSet
+        {
+            self.string = note?.text ?? ""
+        }
+    }
+    
+    func saveNote()
+    {
+        note?.text = string
+        //debugPrint(note)
+    }
 //    override func draw(_ dirtyRect: NSRect) {
 //        super.draw(dirtyRect)
 //

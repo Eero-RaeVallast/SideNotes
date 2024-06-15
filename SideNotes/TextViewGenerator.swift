@@ -12,7 +12,7 @@ struct TextViewGenerator
 {
     // saata siia url
     // Funktsioon käivitub outline avamisel
-    static func makeTextView(frame frameRect: NSRect, text: String = "", delegate: NSTextViewDelegate? = nil)->TextView
+    static func makeTextView(frame frameRect: NSRect, note: NoteContent, delegate: NSTextViewDelegate? = nil)->TextView
     {
         let textContentStorage = NSTextContentStorage()
         
@@ -27,6 +27,7 @@ struct TextViewGenerator
 //        textContentStorage.textStorage?.setAttributedString(NSAttributedString(string: text))
         
         let textView = TextView(frame: frameRect, textContainer: textLayoutManager.textContainer)
+        
         if let textViewdelegate = delegate
         {
             textView.delegate = textViewdelegate
@@ -41,7 +42,8 @@ struct TextViewGenerator
         textView.isEditable = true
         textView.isSelectable = true
         textView.autoresizingMask = [.width, .height]
-        textView.string = text
+        textView.note = note
+        //textView.string = text
         //textContentStorage.textStorage?.setAttributedString(NSAttributedString(string: text))
         //textContentStorage.attributedString = NSAttributedString(string: text)
         
