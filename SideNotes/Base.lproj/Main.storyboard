@@ -683,12 +683,30 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController storyboardIdentifier="Document Window Controller" id="jGA-0Y-lOj" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="Ckk-yw-fiv">
+                <windowController storyboardIdentifier="Document Window Controller" id="jGA-0Y-lOj" customClass="WindowController" customModule="SideNotes" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titleVisibility="hidden" id="Ckk-yw-fiv">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <toolbar key="toolbar" implicitIdentifier="E18C13B7-1E30-4466-AA3B-09B56BE60DD5" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="mWi-xB-mFx">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="6gb-6H-qU0"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="soo-S4-D6r"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="bgy-Ao-V5c"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="1xY-TP-9yv"/>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Enj-yi-46H"/>
+                                <toolbarItem implicitItemIdentifier="70B183E9-CC3E-406B-AD1D-F57B74C7DC0C" label="Add" paletteLabel="Add" tag="-1" image="plus" bordered="YES" sizingBehavior="auto" id="a8Y-8G-ffB">
+                                    <connections>
+                                        <action selector="NewNote:" target="jGA-0Y-lOj" id="pp4-3I-aO6"/>
+                                    </connections>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="Enj-yi-46H"/>
+                                <toolbarItem reference="a8Y-8G-ffB"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                         <connections>
                             <outlet property="delegate" destination="jGA-0Y-lOj" id="98r-iN-zZc"/>
                         </connections>
@@ -740,7 +758,7 @@
                                                             <rect key="frame" x="0.0" y="4" width="236" height="16"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="t6e-HE-cJn">
-                                                                <font key="font" usesAppearanceFont="YES"/>
+                                                                <font key="font" metaFont="system" size="14"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
@@ -782,23 +800,23 @@
             <objects>
                 <viewController storyboardIdentifier="HeaderView" id="7HF-oX-shx" customClass="NoteHeaderVC" customModule="SideNotes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="vsz-0W-EAh" customClass="HeaderView" customModule="SideNotes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="21"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="19"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qfi-aI-ifY">
-                                <rect key="frame" x="8" y="0.0" width="356" height="21"/>
+                                <rect key="frame" x="8" y="0.0" width="356" height="19"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" alignment="left" title="Header" usesSingleLineMode="YES" id="41W-Mc-sNA">
-                                    <font key="font" metaFont="system" size="18"/>
+                                    <font key="font" metaFont="system" size="15"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" contentType="date-time" translatesAutoresizingMaskIntoConstraints="NO" id="HfD-6C-aKH" customClass="TimeLabel" customModule="SideNotes" customModuleProvider="target">
-                                <rect key="frame" x="364" y="0.0" width="84" height="17"/>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" contentType="date-time" translatesAutoresizingMaskIntoConstraints="NO" id="HfD-6C-aKH" customClass="TimeLabel" customModule="SideNotes" customModuleProvider="target">
+                                <rect key="frame" x="364" y="0.0" width="84" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="G81-bX-sjN"/>
                                 </constraints>
-                                <textFieldCell key="cell" lineBreakMode="clipping" selectable="YES" alignment="right" title="Label" id="JUZ-Lo-LSa">
+                                <textFieldCell key="cell" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" alignment="right" title="Label" id="JUZ-Lo-LSa">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

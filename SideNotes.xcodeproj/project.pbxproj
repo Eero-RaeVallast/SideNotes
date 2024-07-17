@@ -10,6 +10,7 @@
 		F41F245B2BFFB15B008E0BC3 /* PopoverVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41F245A2BFFB15B008E0BC3 /* PopoverVC.swift */; };
 		F4A6D1472BDAAFC4008148D9 /* TextViewGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6D1462BDAAFC4008148D9 /* TextViewGenerator.swift */; };
 		F4A6D14A2BF52B32008148D9 /* NoteHeaderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6D1492BF52B32008148D9 /* NoteHeaderVC.swift */; };
+		F4AAAFD32C21DE8C007ACFED /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AAAFD22C21DE8B007ACFED /* WindowController.swift */; };
 		F4ABDAE52BC3010D00464453 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ABDAE42BC3010D00464453 /* AppDelegate.swift */; };
 		F4ABDAE72BC3010D00464453 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ABDAE62BC3010D00464453 /* ViewController.swift */; };
 		F4ABDAE92BC3010D00464453 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ABDAE82BC3010D00464453 /* Document.swift */; };
@@ -29,6 +30,8 @@
 		F4A6D1462BDAAFC4008148D9 /* TextViewGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewGenerator.swift; sourceTree = "<group>"; };
 		F4A6D1482BDD667B008148D9 /* Snippets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Snippets.swift; path = "NB!/Snippets.swift"; sourceTree = SOURCE_ROOT; };
 		F4A6D1492BF52B32008148D9 /* NoteHeaderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteHeaderVC.swift; sourceTree = "<group>"; };
+		F4AAAFD22C21DE8B007ACFED /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		F4AAAFD42C25DB1A007ACFED /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
 		F4ABDAE12BC3010D00464453 /* SideNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SideNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4ABDAE42BC3010D00464453 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4ABDAE62BC3010D00464453 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -84,8 +87,10 @@
 		F4ABDAE32BC3010D00464453 /* SideNotes */ = {
 			isa = PBXGroup;
 			children = (
+				F4AAAFD42C25DB1A007ACFED /* TODO.txt */,
 				F4A6D1482BDD667B008148D9 /* Snippets.swift */,
 				F4ABDAE42BC3010D00464453 /* AppDelegate.swift */,
+				F4AAAFD22C21DE8B007ACFED /* WindowController.swift */,
 				F4ABDAE62BC3010D00464453 /* ViewController.swift */,
 				F4ABDAF82BCAAEFB00464453 /* NoteContent.swift */,
 				F4ABDAF62BC4583800464453 /* Notes.swift */,
@@ -216,6 +221,7 @@
 				F41F245B2BFFB15B008E0BC3 /* PopoverVC.swift in Sources */,
 				F4ABDAF92BCAAEFB00464453 /* NoteContent.swift in Sources */,
 				F4ABDAE92BC3010D00464453 /* Document.swift in Sources */,
+				F4AAAFD32C21DE8C007ACFED /* WindowController.swift in Sources */,
 				F4C85B8D2BFCF7E700DAEF90 /* TextView.swift in Sources */,
 				F4A6D1472BDAAFC4008148D9 /* TextViewGenerator.swift in Sources */,
 				F4C85B8B2BFBD51500DAEF90 /* HeaderView.swift in Sources */,

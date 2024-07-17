@@ -19,9 +19,9 @@ class Document: NSDocument
         // Add your subclass-specific initialization here.
     }
 
-    override class var autosavesInPlace: Bool {
-        return true
-    }
+//    override class var autosavesInPlace: Bool {
+//        return true
+//    }
 
     override func makeWindowControllers() 
     {
@@ -71,6 +71,20 @@ class Document: NSDocument
         }
     }
 
+    //@IBAction
+    override func save(_ sender: Any?)
+    {
+        // NSDocument
+        // fileURL
+        // fileType
+        debugPrint("save")
+    }
+    
+//    - (void)saveToURL:(NSURL *)url
+//               ofType:(NSString *)typeName
+//     forSaveOperation:(NSSaveOperationType)saveOperation
+//    completionHandler:(void (^)(NSError *errorOrNil))completionHandler;
+    
     override func write( to url: URL, ofType typeName: String ) throws
     {
         if let text = viewController?.getStringsFromNotes()
@@ -95,13 +109,18 @@ class Document: NSDocument
     {
         if let text = viewController?.getStringsFromNotes()
         {
+            //fileURL
 //            let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 //            let filename = path.appendingPathComponent("output.txt")
             
             do {
-                try text.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+                if let originalURL = absoluteOriginalContentsURL
+                {
+                    //try text.write(to: originalURL, atomically: true, encoding: String.Encoding.utf8)
+                }
             } catch {
                 // failed to write file – bad permissions, bad filename, missing permissions, or more likely it can't be converted to the encoding
+                debugPrint("Viga")
             }
         }
     }

@@ -5,6 +5,7 @@
 //  Created by Eero Mannik on 07.04.2024.
 //
 // TODO: Salvestada teksti muudatused
+/// Vahetada-lisada pealkiri teksti muutmisel
 
 import Cocoa
 
@@ -75,6 +76,8 @@ class ViewController: NSViewController
         
         outlineView.dataSource = self
         outlineView.delegate = self
+        
+        //outlineView.cornerView = NSButton(frame: NSRect(x: 0, y: 0, width: 5, height: 6))
         // Do any additional setup after loading the view.
     }
     
@@ -82,18 +85,29 @@ class ViewController: NSViewController
     {
         // save data
         outlineView.enumerateAvailableRowViews 
-        { rowView, count in
-            
+        { rowView, rowIndex in
+            debugPrint(rowIndex, rowView)
+            // count - index of row
             //let columns: Int = rowView.numberOfColumns
-            for itemNr in 0...count
-            {
-                if let header = rowView.view(atColumn: itemNr) as? HeaderView
+            
+                if let header = rowView.view(atColumn: 0) as? HeaderView,
+                   let DD = header.documentData
                 {
                     // outline view child of
-                    let nr = outlineView.numberOfChildren(ofItem: header)
-                    debugPrint("v.note?.text", nr)
+                    let nr = outlineView.numberOfChildren(ofItem: DD)
+                    if nr > 0
+                    {
+                        for item in 1...nr
+                        {
+                            if let child = outlineView.child(item, ofItem: DD) as? NoteContent
+                            {
+                                child.stringRepresentation()
+                                //debugPrint(child.stringRepresentation())
+                            }
+                        }
+                    }
                 }
-            }
+            
             
 //            if let view = rowView as? TextView
 //            {
@@ -124,6 +138,17 @@ class ViewController: NSViewController
         }
     }
     
+    func addNote()
+    {
+        let item_count = outlineView.numberOfChildren(ofItem: nil)
+        let indexSet = IndexSet(integer: item_count)
+        // esmalt peab lisama andmeallikasse
+        let note = NoteContent()
+        documentData.append(DocumentData(type: .header, note: note))
+        
+        outlineView.insertItems(at: indexSet, inParent: nil)
+    }
+    
     // FIXME: remove "content: [NoteContent]"
     private func dataFrom(content: [NoteContent])
     {
@@ -134,7 +159,7 @@ class ViewController: NSViewController
         }
     }
     
-    
+    // Get string representation of data
     func getStringsFromNotes() -> String
     {
         var text: String = ""
@@ -159,6 +184,7 @@ extension ViewController: NSOutlineViewDataSource
     {
         if item == nil 
         {
+
             return documentData.count
         }
         else
@@ -167,6 +193,10 @@ extension ViewController: NSOutlineViewDataSource
             {
                 return 1
             }
+//            else if let header = item as? HeaderView
+//            {
+//                return 1
+//            }
             else
             {
                 return 0
@@ -260,12 +290,13 @@ extension ViewController: NSOutlineViewDelegate
             // juhul kui olemasolev kõrgus muutus
             if containerHeight > 0
             {
-                newHeight = containerHeight
+                newHeight = containerHeight+5
                 containerHeight = 0
             }
             else
             {
                 placeholderTextView = TextViewGenerator.makeTextView(frame: sizeRect, note: note, delegate: self)
+                note.textview = placeholderTextView
                 //placeholderTextView.string = text
                 //textContentStorage.textStorage?.setAttributedString(NSAttributedString(string: text))
                 //placeholderTextView.textContentStorage?.textStorage?.setAttributedString(NSAttributedString(string: text))
@@ -286,7 +317,7 @@ extension ViewController: NSOutlineViewDelegate
                     }
                     //manager.ensureLayout(for: container)
                     //newHeight = manager.usedRect(for: container).size.height
-                    newHeight = manager.usageBoundsForTextContainer.height
+                    newHeight = manager.usageBoundsForTextContainer.height+5
                 }
             }
         }
@@ -299,7 +330,7 @@ extension ViewController: NSOutlineViewDelegate
         let myWidth: CGFloat = CGFloat(tableColumn?.width ?? 200)
         sizeRect = NSRect(x: 0, y: 0, width: myWidth, height: 10)
         
-        if let header = item as? DocumentData
+        if let DD = item as? DocumentData
         {
             // return header view
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
@@ -307,7 +338,13 @@ extension ViewController: NSOutlineViewDelegate
             {
                 //popoverVC.documentViewController = self
                 //headerVC.header = note.header
-                headerVC.note = header.note
+                /// asendada note DD-ga
+                //headerVC.documentData = DD
+                headerVC.note = DD.note
+                if let HV = headerVC.view as? HeaderView
+                {
+                    HV.documentData = DD
+                }
                 return headerVC.view
             }
             //return v
@@ -323,6 +360,7 @@ extension ViewController: NSOutlineViewDelegate
             {
                 // textviewl peab olema note
                 let textView = TextViewGenerator.makeTextView(frame: sizeRect, note: note, delegate: self)
+                note.textview = textView
                 if let mgr = textView.textLayoutManager
                 {
                     mgr.delegate = self
@@ -388,10 +426,10 @@ extension ViewController: NSOutlineViewDelegate
 //    }
     
     
-    @objc func textViewFrameChanged(sender: Notification)
-    {
-        debugPrint(sender.name)
-    }
+//    @objc func textViewFrameChanged(sender: Notification)
+//    {
+//        debugPrint(sender.name)
+//    }
 }
 
 
@@ -426,13 +464,12 @@ extension ViewController: NSTextViewDelegate
         }
     }
     
+    
     func textDidEndEditing(_ notification: Notification)
     {
         if let textview = notification.object as? TextView
         {
-            //textview.note?.text = textview.string
             textview.saveNote()
-            //debugPrint(textview.string)
         }
     }
     

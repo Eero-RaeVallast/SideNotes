@@ -16,13 +16,38 @@ class NoteHeaderVC: NSViewController
     @IBOutlet weak var TimeLabel: TimeLabel!
     
     
-    var header: String = ""
+    var header: String = "..."
+    
+    //var documentData: DocumentData?
     var note: NoteContent?
     {
         didSet
         {
-            header = note?.header ?? ""
+            note?.myView = self
+            header = note?.noteHeader() ?? "."
+//            if let hdr = note?.header, hdr.isEmpty
+//            {
+//                header = "....NCDS"
+//            }
+//            else
+//            {
+//                header = note?.header ?? "...."
+//            }
+            // toimub enne akna laadimist
+//            if header.isEmpty
+//            {
+//                HeaderLabel.placeholderString = "..."
+//            }
         }
+    }
+    
+    func headerChanged(newHeader: String)
+    {
+        HeaderLabel.stringValue = newHeader
+//        if let tmp_note = note
+//        {
+//            tmp_note.noteHeader()
+//        }
     }
     
     override func viewDidLoad() 

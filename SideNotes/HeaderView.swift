@@ -9,8 +9,9 @@ import Cocoa
 
 class HeaderView: NSView 
 {
-
-    override func draw(_ dirtyRect: NSRect) 
+    var documentData: DocumentData?
+    
+    override func draw(_ dirtyRect: NSRect)
     {
         super.draw(dirtyRect)
 

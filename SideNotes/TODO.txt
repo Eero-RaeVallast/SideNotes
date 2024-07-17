@@ -1,0 +1,22 @@
+ViewController   viewWillDisappear()
+Uue märkuse esimese rea lisamisel võiks panna pealkirja
+
+++
+NoteContent   func noteHeader()->String
+kasutada esimest sõnadega rida
+++
+
+NoteContent  katsun lahti saada headerist
+
+salvestada fail
+override func viewWillDisappear()
+
+asendada note DD-ga
+func outlineView( _ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any ) -> NSView?
+
+
+modification time seada peale redigeerimist uuesti
+
+kustutada märkus
+sorteerida
+KORRASTADA!!

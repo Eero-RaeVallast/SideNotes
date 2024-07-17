@@ -21,11 +21,42 @@ struct DocumentData
 
 class NoteContent
 {
+    var textview: TextView?
+    //var documentData: DocumentData?
+    
+    
     var creationDate: Date
     var modificationDate: Date
     var tags:Set<String>
     var text: String
+    /// Remove it
     var header: String
+//    {
+//        didSet
+//        {
+//            debugPrint("Header is set:", header)
+//        }
+//    }
+    
+    
+    func noteHeader()->String
+    {
+        var return_string = "New Note"
+
+        if let i = text.firstIndex(where: { !$0.isWhitespace })
+        {
+            let text_without_whitespaces = text.suffix(from: i)
+            if let tmp_header = text_without_whitespaces.components(separatedBy: CharacterSet.newlines).first,
+               !tmp_header.isEmpty
+            {
+                return_string = tmp_header
+            }
+            //print("\(text[i]) starts with 'A'!")
+        }
+        return return_string
+    }
+    
+    var myView: NoteHeaderVC?
     
     init()
     {
@@ -34,6 +65,31 @@ class NoteContent
         tags = []
         text = ""
         header = ""
+    }
+    
+    /// Applies changes into data source, and replaces header.
+    // kutsun seda peale text did end editing
+    func textChanged(newtext: String)
+    {
+        // modification date
+        // header
+        if text != newtext
+        {
+            if let header_line = text.components(separatedBy: CharacterSet.newlines).first,
+               let new_line = newtext.components(separatedBy: CharacterSet.newlines).first
+            {
+                if header_line != new_line
+                {
+                    //header = header_line
+                    if let headerVC = myView
+                    {
+                        text = newtext
+                        myView?.headerChanged(newHeader: noteHeader())
+                        //headerVC.headerChanged()
+                    }
+                }
+            }
+        }
     }
     
     init(creationDate: Date, modificationDate: Date, tags: Set<String>, text: String, header: String)
@@ -67,9 +123,14 @@ class NoteContent
         header + "\n" + text +  "tags: " + tags.joined(separator: ".") + "\n" + creationDate.description + "\n" + modificationDate.description
     }
     
-    func stringRepresentation() -> String
+    /// Updates text from view and returns it.
+    @discardableResult func stringRepresentation() -> String
     {
         var stringRepresentation: String = ""
+        if let data = textview?.string
+        {
+            text = data
+        }
         if !text.isEmpty
         {
             stringRepresentation = "\n## " + text +
@@ -85,16 +146,16 @@ class NoteContent
     {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current
-        dateFormatter.dateFormat = "dd/mm/yyyy"
+        dateFormatter.dateFormat = "dd/MM/yyyy"
         //dateFormatter.setLocalizedDateFormatFromTemplate("dd/mm/yyyy")
-        
+        debugPrint(modificationDate, dateFormatter.string(from: modificationDate), modificationDate.formatted())
         return dateFormatter.string(from: modificationDate)
     }
     func creationTime() -> String
     {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current
-        dateFormatter.dateFormat = "dd/mm/yyyy"
+        dateFormatter.dateFormat = "dd/MM/yyyy"
         //dateFormatter.setLocalizedDateFormatFromTemplate("dd/mm/yyyy")
         
         return dateFormatter.string(from: creationDate)
@@ -113,7 +174,7 @@ class NoteContent
         //dateFormatter.setLocalizedDateFormatFromTemplate("dd/mm/yyyy")
         
         //let string = "01/02/2016"
-        dateFormatter.dateFormat = "dd/mm/yyyy"
+        dateFormatter.dateFormat = "dd/MM/yyyy"
         
 //        if let date = dateFormatter.date(from: string)
 //        {
